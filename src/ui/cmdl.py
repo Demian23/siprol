@@ -1,14 +1,15 @@
 import argparse
-from sig.interface import DefaultAmplitude, DefaultPhase, Signal
-from sig.impl import AmplitudeModulation, FrequencyModulation, RectanglePulse, Sawtooth, Sinus, Sum, Triangle, Noise
+from dsp.sig import DefaultAmplitude, DefaultPhase, Signal
+from dsp.sig_impl import AmplitudeModulation, FrequencyModulation, RectanglePulse, Sawtooth, Sinus, Sum, Triangle, Noise
 
 class Request:
-    def __init__(self, signal: Signal, sample_rate: int, view: bool, sound: bool, seconds_duration: int):
+    def __init__(self, signal: Signal, sample_rate: int, view: bool, sound: bool, seconds_duration: int, spectrum: bool):
         self.signal = signal
         self.view = view
         self.sound = sound
         self.seconds_duration = seconds_duration
         self.sample_rate = sample_rate 
+        self.draw_spectrum = spectrum
 
 class CmdlUI:
 
@@ -32,6 +33,7 @@ class CmdlUI:
         parser.add_argument('--duty_cycle', nargs='+', type=float, help='For pulse')
         parser.add_argument('--view', action='store_true', help='View graphics')
         parser.add_argument('--signals', nargs='+', choices=permited_signals)
+        parser.add_argument('--spectrum', action='store_true', help='FFT')
         self.__parser = parser
 
     def read_signal(self, parsed_values, sig) -> Signal:
@@ -77,4 +79,4 @@ class CmdlUI:
             case _:
                raise ValueError() 
         return Request(sig, parsed.sample_rate, parsed.view, parsed.sound, 
-                       parsed.duration)
+                       parsed.duration, parsed.spectrum)

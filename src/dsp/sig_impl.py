@@ -1,4 +1,4 @@
-from .interface import Signal, pi2
+from dsp.sig import Signal, pi2
 import numpy as m
 
 class Noise(Signal):
@@ -18,7 +18,7 @@ class RectanglePulse(Signal):
         self.__duty_cycle = duty_cycle
 
     def at(self, x):
-        cond = self._gen_phase(x) % pi2 / pi2 <= self.__duty_cycle 
+        cond = (self._gen_phase(x) % pi2 / pi2) <= self.__duty_cycle 
         ampl = self._gen_ampl(x)
         return ampl if cond else -ampl
 
